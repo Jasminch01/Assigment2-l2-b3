@@ -17,8 +17,15 @@ const getSingleProductDB = async (id : string) => {
   return result;
 }
 
+const updateProductDB = async(id : string, productUpdate : Iproduct) =>{
+  const productId = {_id : new ObjectId(id)}
+  const result = await productModel.updateOne(productId, productUpdate)
+  return result;
+}
+
 export const productService = {
   createProductDB,
   getAllProductDB,
   getSingleProductDB,
+  updateProductDB,
 };

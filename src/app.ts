@@ -5,6 +5,7 @@ import router from "./app/module/products/product.routes";
 const app = express();
 
 //parser
+app.use(express.json())
 
 app.use(cors());
 

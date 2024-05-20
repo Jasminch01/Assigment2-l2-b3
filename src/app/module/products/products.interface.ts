@@ -1,19 +1,19 @@
-export interface Ivariant {
+export interface Ivariants {
   type: string;
   value: string;
 }
 
-export interface Iivertry {
+export interface Iinventory {
   quantity: number;
   inStock: boolean;
 }
 
 export interface Iproduct {
   name: string;
-  desctiption: string;
+  description: string;
   price: number;
   category: string;
-  tages: [string];
-  variantes: Ivariant[];
-  iventry: Iivertry;
+  tags: [string];
+  variants: Ivariants[];
+  inventory: Iinventory;
 }

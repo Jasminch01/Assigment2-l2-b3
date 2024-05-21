@@ -30,14 +30,19 @@ const getAllProduct = async (req: Request, res: Response) => {
         res.status(500).json({
           success: false,
           message: "Product not found",
-          data: result,
+          data: null,
         });
       }
-      res.status(200).json({
-        success: true,
-        messge: `Products matching search term ${searchTerm} fetched successfully!`,
-        data: result,
-      });
+      try {
+        res.status(200).json({
+          success: true,
+          messge: `Products matching search term ${searchTerm} fetched successfully!`,
+          data: result,
+        });
+      } catch (error) {
+        console.log(error)
+      }
+
     } else {
       const result = await productService.getAllProductDB();
       if (!result) {
@@ -69,7 +74,7 @@ const getSingleProduct = async (req: Request, res: Response) => {
     if (!result) {
       res.status(500).json({
         success: false,
-        message: "data not found",
+        message: "product not found",
         data: result,
       });
     }
@@ -79,11 +84,7 @@ const getSingleProduct = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message || "something went wrong",
-      data: null,
-    });
+    console.log(error.message)
   }
 };
 

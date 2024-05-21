@@ -50,11 +50,15 @@ const getAllOrders = async (req: Request, res: Response) => {
           data: null,
         });
       }
-      res.status(200).json({
-        success: true,
-        message: "orders are retrived successfully",
-        data: result,
-      });
+      try {
+        res.status(200).json({
+          success: true,
+          message: "orders are retrived successfully",
+          data: result,
+        });
+      } catch (error) {
+        console.log(error)
+      }
     } else {
       const result = await orderServices.getAllOrderDB();
       if (!result) {
@@ -64,11 +68,19 @@ const getAllOrders = async (req: Request, res: Response) => {
           result: result,
         });
       }
-      res.status(200).json({
-        success: true,
-        message: "All Product are retrived successfully",
-        data: result,
-      });
+      try {
+        res.status(200).json({
+          success: true,
+          message: "All Product are retrived successfully",
+          data: result,
+        });
+      } catch (error) {
+        res.status(500).json({
+          success: false,
+          message: "failed to retirved data",
+          data: error,
+        });
+      }
     }
   } catch (error) {
     res.status(500).json({

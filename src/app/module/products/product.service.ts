@@ -1,7 +1,6 @@
 import { ObjectId } from "mongodb";
 import { productModel } from "../product.model";
 import { Iproduct } from "./products.interface";
-import { any } from "zod";
 
 const createProductDB = async (product: Iproduct) => {
   const result = await productModel.create(product);
@@ -45,6 +44,21 @@ const searchProductDB = async (searchTerm: any) => {
   return result;
 };
 
+const countOrder = async (productId: string, quantity: number) => {
+  const id = { _id: new ObjectId(productId) };
+  const result = await productModel.updateOne(id, [
+    {
+      $set: {
+        "inventory.quantity": {
+          $subtract: ["$inventory.quantity", quantity],
+        },
+      },
+    },
+  ]);
+
+  return result;
+};
+
 export const productService = {
   createProductDB,
   getAllProductDB,
@@ -52,4 +66,5 @@ export const productService = {
   updateProductDB,
   deleteProductDB,
   searchProductDB,
+  countOrder,
 };

@@ -1,6 +1,6 @@
 export interface Iorder {
   email: string;
-  productId: number;
-  Price: number;
+  productId: string;
+  price: number;
   quantity: number;
 }

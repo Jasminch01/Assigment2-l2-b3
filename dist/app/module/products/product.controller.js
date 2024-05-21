@@ -14,7 +14,6 @@ const product_service_1 = require("./product.service");
 const createProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { product } = req.body;
-        // console.log(product)
         // const validNewProduct = productValidationSchema.parse(product);
         const result = yield product_service_1.productService.createProductDB(product);
         res.status(200).json({
@@ -33,19 +32,38 @@ const createProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 });
 const getAllProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const result = yield product_service_1.productService.getAllProductDB();
-        if (!result) {
-            res.status(500).json({
-                success: false,
-                message: "data not found",
-                result: result,
+        const { searchTerm } = req.query;
+        if (searchTerm) {
+            const result = yield product_service_1.productService.searchProductDB(searchTerm);
+            console.log(result);
+            if (result.length === 0) {
+                res.status(500).json({
+                    success: false,
+                    message: "Product not found",
+                    data: result,
+                });
+            }
+            res.status(200).json({
+                success: true,
+                messge: `Products matching search term ${searchTerm} fetched successfully!`,
+                data: result,
             });
         }
-        res.status(200).json({
-            success: true,
-            message: "All Product are retrived successfully",
-            data: result,
-        });
+        else {
+            const result = yield product_service_1.productService.getAllProductDB();
+            if (!result) {
+                res.status(500).json({
+                    success: false,
+                    message: "data not found",
+                    result: result,
+                });
+            }
+            res.status(200).json({
+                success: true,
+                message: "All Product are retrived successfully",
+                data: result,
+            });
+        }
     }
     catch (error) {
         res.status(500).json({
@@ -85,10 +103,10 @@ const updateProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         const updateProduct = req.body;
         const { productId } = req.params;
         const result = yield product_service_1.productService.updateProductDB(productId, updateProduct);
-        if (!result) {
+        if (!result || result.modifiedCount < 1 || result.modifiedCount < 1) {
             res.status(500).json({
                 success: false,
-                message: "something went wrong",
+                message: "something went wrong product not found",
                 data: null,
             });
         }
@@ -110,7 +128,7 @@ const deleteProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     try {
         const { productId } = req.params;
         const result = yield product_service_1.productService.deleteProductDB(productId);
-        if (!result) {
+        if (result.deletedCount < 1) {
             res.status(500).json({
                 success: false,
                 message: "something went wrong",

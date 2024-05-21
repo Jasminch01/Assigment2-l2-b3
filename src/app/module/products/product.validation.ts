@@ -1,24 +1,25 @@
-import { z } from "zod";
-const inventoryValidationSchema = z.object({
-  quantity: z.number().min(0, "Quantity must be a non-negative number"),
-  inStock: z.boolean()
+import Joi from "joi";
+// Define Joi schema for inventory
+const inventorySchema = Joi.object({
+  quantity: Joi.number().min(0).required(),
+  inStock: Joi.boolean().required(),
 });
 
-// Define the Zod schema for the Variant
-const variantValidationSchema = z.object({
-  type: z.string(),
-  value: z.string()
+// Define Joi schema for variants
+const variantSchema = Joi.object({
+  type: Joi.string().required(),
+  value: Joi.string().required(),
 });
 
-// Define the Zod schema for the Product
-const productValidationSchema = z.object({
-  name: z.string().nonempty("Name is required"),
-  description: z.string().nonempty("Description is required"),
-  price: z.number().positive("Price must be a positive number"),
-  category: z.string().nonempty("Category is required"),
-  tags: z.array(z.string()).nonempty("Tags array must have at least one tag"),
-  variants: z.array(variantValidationSchema).nonempty("Variants array must have at least one variant"),
-  inventory: inventoryValidationSchema
+// Define Joi schema for product
+const productValidationSchema = Joi.object({
+  name: Joi.string().required(),
+  description: Joi.string().required(),
+  price: Joi.number().min(0).required(),
+  category: Joi.string().required(),
+  tags: Joi.array().items(Joi.string().required()).required(),
+  variants: Joi.array().items(variantSchema).required(),
+  inventory: inventorySchema.required(),
 });
 
 export default productValidationSchema;

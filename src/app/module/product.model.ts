@@ -18,7 +18,7 @@ const productSchema = new Schema<Iproduct>({
   category: { type: String, required: true },
   tags: { type: [String], required: true },
   variants: { type: [variantSchema], required: true },
-  inventory: iventorySchema,
+  inventory: { type: iventorySchema, require: true },
 });
 
 export const productModel = model<Iproduct>("product", productSchema);

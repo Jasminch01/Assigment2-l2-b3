@@ -8,7 +8,7 @@ const getAllOrderDB = async () => {
   const result = await oderModel.find()
   return result;
 };
-const getAllOrderByEmailDB = async (UserEmail : any) => {
+const getAllOrderByEmailDB = async (UserEmail : string) => {
   const result = await oderModel.find({email : UserEmail})
   return result;
 };

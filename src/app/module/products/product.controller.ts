@@ -5,13 +5,15 @@ import { productService } from "./product.service";
 const createProduct = async (req: Request, res: Response) => {
   try {
     const { product } = req.body;
-    // const validNewProduct = productValidationSchema.parse(product);
-    const result = await productService.createProductDB(product);
-    res.status(200).json({
-      success: true,
-      message: "Product created successfully!",
-      data: result,
-    });
+    const { value, error } = productValidationSchema.validate(product);
+    if (!error) {
+      const result = await productService.createProductDB(value);
+      res.status(200).json({
+        success: true,
+        message: "Product created successfully!",
+        data: result,
+      });
+    }
   } catch (error: any) {
     res.status(500).json({
       success: false,
@@ -40,9 +42,8 @@ const getAllProduct = async (req: Request, res: Response) => {
           data: result,
         });
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
-
     } else {
       const result = await productService.getAllProductDB();
       if (!result) {
@@ -84,7 +85,7 @@ const getSingleProduct = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error: any) {
-    console.log(error.message)
+    console.log(error.message);
   }
 };
 

@@ -56,11 +56,16 @@ const getAllOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                     data: null,
                 });
             }
-            res.status(200).json({
-                success: true,
-                message: "orders are retrived successfully",
-                data: result,
-            });
+            try {
+                res.status(200).json({
+                    success: true,
+                    message: "orders are retrived successfully",
+                    data: result,
+                });
+            }
+            catch (error) {
+                console.log(error);
+            }
         }
         else {
             const result = yield order_service_1.orderServices.getAllOrderDB();
@@ -71,11 +76,20 @@ const getAllOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                     result: result,
                 });
             }
-            res.status(200).json({
-                success: true,
-                message: "All Product are retrived successfully",
-                data: result,
-            });
+            try {
+                res.status(200).json({
+                    success: true,
+                    message: "All Product are retrived successfully",
+                    data: result,
+                });
+            }
+            catch (error) {
+                res.status(500).json({
+                    success: false,
+                    message: "failed to retirved data",
+                    data: error,
+                });
+            }
         }
     }
     catch (error) {

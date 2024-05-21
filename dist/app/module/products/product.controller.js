@@ -8,19 +8,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.productController = void 0;
+const product_validation_1 = __importDefault(require("./product.validation"));
 const product_service_1 = require("./product.service");
 const createProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { product } = req.body;
-        // const validNewProduct = productValidationSchema.parse(product);
-        const result = yield product_service_1.productService.createProductDB(product);
-        res.status(200).json({
-            success: true,
-            message: "Product created successfully!",
-            data: result,
-        });
+        const { value, error } = product_validation_1.default.validate(product);
+        if (!error) {
+            const result = yield product_service_1.productService.createProductDB(value);
+            res.status(200).json({
+                success: true,
+                message: "Product created successfully!",
+                data: result,
+            });
+        }
     }
     catch (error) {
         res.status(500).json({
@@ -39,14 +45,19 @@ const getAllProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 res.status(500).json({
                     success: false,
                     message: "Product not found",
+                    data: null,
+                });
+            }
+            try {
+                res.status(200).json({
+                    success: true,
+                    messge: `Products matching search term ${searchTerm} fetched successfully!`,
                     data: result,
                 });
             }
-            res.status(200).json({
-                success: true,
-                messge: `Products matching search term ${searchTerm} fetched successfully!`,
-                data: result,
-            });
+            catch (error) {
+                console.log(error);
+            }
         }
         else {
             const result = yield product_service_1.productService.getAllProductDB();
@@ -79,7 +90,7 @@ const getSingleProduct = (req, res) => __awaiter(void 0, void 0, void 0, functio
         if (!result) {
             res.status(500).json({
                 success: false,
-                message: "data not found",
+                message: "product not found",
                 data: result,
             });
         }
@@ -90,11 +101,7 @@ const getSingleProduct = (req, res) => __awaiter(void 0, void 0, void 0, functio
         });
     }
     catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message || "something went wrong",
-            data: null,
-        });
+        console.log(error.message);
     }
 });
 const updateProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {

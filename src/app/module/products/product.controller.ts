@@ -6,11 +6,11 @@ const createProduct = async (req: Request, res: Response) => {
   try {
     const { product } = req.body;
     // console.log(product)
-    const validNewProduct = productValidationSchema.parse(product);
-    const result = await productService.createProductDB(validNewProduct);
+    // const validNewProduct = productValidationSchema.parse(product);
+    const result = await productService.createProductDB(product);
     res.status(200).json({
       success: true,
-      message: "a new product created successfully",
+      message: "Product created successfully!",
       data: result,
     });
   } catch (error: any) {
@@ -100,10 +100,36 @@ const updateProduct = async (req: Request, res: Response) => {
     });
   }
 };
+const deleteProduct = async (req: Request, res: Response) => {
+  try {
+    const { productId } = req.params;
+    const result = await productService.deleteProductDB(productId);
+    if (!result) {
+      res.status(500).json({
+        success: false,
+        message: "something went wrong",
+        data: null,
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "product deleted successfully",
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || "something went wrong",
+      data: null,
+    });
+  }
+};
 
 export const productController = {
   createProduct,
   getAllProduct,
   getSingleProduct,
   updateProduct,
+  deleteProduct,
 };

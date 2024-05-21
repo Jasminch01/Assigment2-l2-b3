@@ -5,7 +5,6 @@ import { productService } from "./product.service";
 const createProduct = async (req: Request, res: Response) => {
   try {
     const { product } = req.body;
-    // console.log(product)
     // const validNewProduct = productValidationSchema.parse(product);
     const result = await productService.createProductDB(product);
     res.status(200).json({
@@ -24,19 +23,37 @@ const createProduct = async (req: Request, res: Response) => {
 
 const getAllProduct = async (req: Request, res: Response) => {
   try {
-    const result = await productService.getAllProductDB();
-    if (!result) {
-      res.status(500).json({
-        success: false,
-        message: "data not found",
-        result: result,
+    const { searchTerm } = req.query;
+    if (searchTerm) {
+      const result = await productService.searchProductDB(searchTerm);
+      console.log(result);
+      if (result.length === 0) {
+        res.status(500).json({
+          success: false,
+          message: "Product not found",
+          data: result,
+        });
+      }
+      res.status(200).json({
+        success: true,
+        messge: `Products matching search term ${searchTerm} fetched successfully!`,
+        data: result,
+      });
+    } else {
+      const result = await productService.getAllProductDB();
+      if (!result) {
+        res.status(500).json({
+          success: false,
+          message: "data not found",
+          result: result,
+        });
+      }
+      res.status(200).json({
+        success: true,
+        message: "All Product are retrived successfully",
+        data: result,
       });
     }
-    res.status(200).json({
-      success: true,
-      message: "All Product are retrived successfully",
-      data: result,
-    });
   } catch (error: any) {
     res.status(500).json({
       success: false,
@@ -79,10 +96,10 @@ const updateProduct = async (req: Request, res: Response) => {
       productId,
       updateProduct
     );
-    if (!result) {
+    if (!result || result.modifiedCount < 1 || result.modifiedCount < 1) {
       res.status(500).json({
         success: false,
-        message: "something went wrong",
+        message: "something went wrong product not found",
         data: null,
       });
     }
@@ -104,7 +121,7 @@ const deleteProduct = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
     const result = await productService.deleteProductDB(productId);
-    if (!result) {
+    if (result.deletedCount < 1) {
       res.status(500).json({
         success: false,
         message: "something went wrong",

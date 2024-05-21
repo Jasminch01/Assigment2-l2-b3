@@ -15,6 +15,16 @@ const createOrderDB = (newOrder) => __awaiter(void 0, void 0, void 0, function* 
     const result = yield order_model_1.oderModel.create(newOrder);
     return result;
 });
+const getAllOrderDB = () => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield order_model_1.oderModel.find();
+    return result;
+});
+const getAllOrderByEmailDB = (UserEmail) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield order_model_1.oderModel.find({ email: UserEmail });
+    return result;
+});
 exports.orderServices = {
     createOrderDB,
+    getAllOrderDB,
+    getAllOrderByEmailDB,
 };

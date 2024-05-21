@@ -35,7 +35,6 @@ const getAllProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         const { searchTerm } = req.query;
         if (searchTerm) {
             const result = yield product_service_1.productService.searchProductDB(searchTerm);
-            console.log(result);
             if (result.length === 0) {
                 res.status(500).json({
                     success: false,

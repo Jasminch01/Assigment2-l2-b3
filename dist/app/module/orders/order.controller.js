@@ -44,6 +44,49 @@ const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         });
     }
 });
+const getAllOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { email } = req.query;
+        if (email) {
+            const result = yield order_service_1.orderServices.getAllOrderByEmailDB(email);
+            if (result.length === 0) {
+                res.status(200).json({
+                    success: false,
+                    message: "order not found",
+                    data: null,
+                });
+            }
+            res.status(200).json({
+                success: true,
+                message: "orders are retrived successfully",
+                data: result,
+            });
+        }
+        else {
+            const result = yield order_service_1.orderServices.getAllOrderDB();
+            if (!result) {
+                res.status(500).json({
+                    success: false,
+                    message: "data not found",
+                    result: result,
+                });
+            }
+            res.status(200).json({
+                success: true,
+                message: "All Product are retrived successfully",
+                data: result,
+            });
+        }
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "failed to retirved data",
+            data: error,
+        });
+    }
+});
 exports.orderController = {
     createOrder,
+    getAllOrders,
 };

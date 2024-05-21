@@ -44,7 +44,17 @@ const searchProductDB = async (searchTerm: any) => {
   return result;
 };
 
-const countOrder = async (productId: string, quantity: number) => {
+const checkQuantityOfProducts = async (productId: string) => {
+  const id = { _id: new ObjectId(productId) };
+  const checkQuantityOfProducts = await productModel.aggregate([
+    { $match: id },
+    { $project: { "inventory.quantity": 1 } },
+  ]);
+  const stockQuantity = checkQuantityOfProducts[0].inventory.quantity;
+  return stockQuantity;
+};
+
+const subtractProduct = async (productId: string, quantity: number) => {
   const id = { _id: new ObjectId(productId) };
   const result = await productModel.updateOne(id, [
     {
@@ -54,8 +64,18 @@ const countOrder = async (productId: string, quantity: number) => {
         },
       },
     },
+    {
+      $set: {
+        "inventory.inStock": {
+          $cond: [
+            { $lte: [{ $subtract: ["$inventory.quantity", quantity] }, 0] },
+            false,
+            true,
+          ],
+        },
+      },
+    },
   ]);
-
   return result;
 };
 
@@ -66,5 +86,6 @@ export const productService = {
   updateProductDB,
   deleteProductDB,
   searchProductDB,
-  countOrder,
+  subtractProduct,
+  checkQuantityOfProducts,
 };

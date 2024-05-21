@@ -38,6 +38,48 @@ const createOrder = async (req: Request, res: Response) => {
   }
 };
 
+const getAllOrders = async (req: Request, res: Response) => {
+  try {
+    const { email } = req.query;
+    if (email) {
+      const result = await orderServices.getAllOrderByEmailDB(email);
+      if (result.length === 0) {
+        res.status(200).json({
+          success: false,
+          message: "order not found",
+          data: null,
+        });
+      }
+      res.status(200).json({
+        success: true,
+        message: "orders are retrived successfully",
+        data: result,
+      });
+    } else {
+      const result = await orderServices.getAllOrderDB();
+      if (!result) {
+        res.status(500).json({
+          success: false,
+          message: "data not found",
+          result: result,
+        });
+      }
+      res.status(200).json({
+        success: true,
+        message: "All Product are retrived successfully",
+        data: result,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "failed to retirved data",
+      data: error,
+    });
+  }
+};
+
 export const orderController = {
   createOrder,
+  getAllOrders,
 };

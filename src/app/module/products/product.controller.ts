@@ -26,7 +26,6 @@ const getAllProduct = async (req: Request, res: Response) => {
     const { searchTerm } = req.query;
     if (searchTerm) {
       const result = await productService.searchProductDB(searchTerm);
-      console.log(result);
       if (result.length === 0) {
         res.status(500).json({
           success: false,

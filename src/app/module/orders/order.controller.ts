@@ -67,11 +67,11 @@ const getAllOrders = async (req: Request, res: Response) => {
       }
     } else {
       const result = await orderServices.getAllOrderDB();
-      if (!result) {
+      if (!result ||result.length === 0) {
         res.status(500).json({
           success: false,
-          message: "data not found",
-          result: result,
+          message: "Order not found",
+          data: result,
         });
       }
       try {
@@ -88,12 +88,14 @@ const getAllOrders = async (req: Request, res: Response) => {
         });
       }
     }
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "failed to retirved data",
-      data: error,
-    });
+  } catch (error : any) {
+    if (!res.headersSent) {
+      res.status(500).json({
+        success: false,
+        message: "An error occurred while retrived the orders",
+        error: error.message,
+      });
+    }
   }
 };
 

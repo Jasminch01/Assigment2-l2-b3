@@ -116,7 +116,7 @@ const updateProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         const updateProduct = req.body;
         const { productId } = req.params;
         const result = yield product_service_1.productService.updateProductDB(productId, updateProduct);
-        if (!result || result.modifiedCount < 1 || result.modifiedCount < 1) {
+        if (!result || result.modifiedCount < 1) {
             res.status(500).json({
                 success: false,
                 message: "something went wrong product not found",

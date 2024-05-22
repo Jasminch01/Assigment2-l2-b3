@@ -104,7 +104,7 @@ const updateProduct = async (req: Request, res: Response) => {
       productId,
       updateProduct
     );
-    if (!result || result.modifiedCount < 1 || result.modifiedCount < 1) {
+    if (!result || result.modifiedCount < 1) {
       res.status(500).json({
         success: false,
         message: "something went wrong product not found",

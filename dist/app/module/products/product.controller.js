@@ -87,6 +87,7 @@ const getSingleProduct = (req, res) => __awaiter(void 0, void 0, void 0, functio
     try {
         const { productId } = req.params;
         const result = yield product_service_1.productService.getSingleProductDB(productId);
+        console.log(result);
         if (!result) {
             res.status(500).json({
                 success: false,
@@ -101,7 +102,13 @@ const getSingleProduct = (req, res) => __awaiter(void 0, void 0, void 0, functio
         });
     }
     catch (error) {
-        console.log(error.message);
+        if (!res.headersSent) {
+            res.status(500).json({
+                success: false,
+                message: "An error occurred while fetching the product",
+                error: error.message,
+            });
+        }
     }
 });
 const updateProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -123,11 +130,13 @@ const updateProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         });
     }
     catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message || "something went wrong",
-            data: null,
-        });
+        if (!res.headersSent) {
+            res.status(500).json({
+                success: false,
+                message: "An error occurred while update the product",
+                error: error.message,
+            });
+        }
     }
 });
 const deleteProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {

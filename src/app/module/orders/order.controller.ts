@@ -56,8 +56,14 @@ const getAllOrders = async (req: Request, res: Response) => {
           message: "orders are retrived successfully",
           data: result,
         });
-      } catch (error) {
-        console.log(error)
+      } catch (error : any) {
+        if (!res.headersSent) {
+          res.status(500).json({
+            success: false,
+            message: "An error occurred while fetching the product",
+            error: error.message,
+          });
+        }
       }
     } else {
       const result = await orderServices.getAllOrderDB();

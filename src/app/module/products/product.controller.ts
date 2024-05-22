@@ -72,6 +72,7 @@ const getSingleProduct = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
     const result = await productService.getSingleProductDB(productId);
+    console.log(result);
     if (!result) {
       res.status(500).json({
         success: false,
@@ -85,7 +86,13 @@ const getSingleProduct = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error: any) {
-    console.log(error.message);
+    if (!res.headersSent) {
+      res.status(500).json({
+        success: false,
+        message: "An error occurred while fetching the product",
+        error: error.message,
+      });
+    }
   }
 };
 
@@ -111,11 +118,13 @@ const updateProduct = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message || "something went wrong",
-      data: null,
-    });
+    if (!res.headersSent) {
+      res.status(500).json({
+        success: false,
+        message: "An error occurred while update the product",
+        error: error.message,
+      });
+    }
   }
 };
 const deleteProduct = async (req: Request, res: Response) => {

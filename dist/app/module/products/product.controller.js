@@ -17,8 +17,7 @@ const product_validation_1 = __importDefault(require("./product.validation"));
 const product_service_1 = require("./product.service");
 const createProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { product } = req.body;
-        const { value, error } = product_validation_1.default.validate(product);
+        const { value, error } = product_validation_1.default.validate(req.body);
         if (!error) {
             const result = yield product_service_1.productService.createProductDB(value);
             res.status(200).json({
